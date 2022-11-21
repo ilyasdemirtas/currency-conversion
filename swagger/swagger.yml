@@ -1,0 +1,89 @@
+consumes:
+    - application/json
+produces:
+    - application/json
+info:
+    description: Currency Conversion Project
+    title: Currency Conversion Project
+    version: 1.0.0
+
+basePath: /api
+
+components:
+    securitySchemes:
+        BearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+
+paths:
+    /login:
+        post:
+            tags:
+                - login
+            parameters:
+                - name: login
+                  in: body
+                  schema:
+                      $ref: "#/definitions/login"
+            responses:
+                200:
+                    description: Login
+                    schema:
+                        $ref: "#/definitions/login"
+                default:
+                    description: generic error response
+                    schema:
+                        $ref: "#/definitions/error"
+    /wallets:
+        get:
+            tags:
+                - wallets
+            security:
+                - BearerAuth: []   # Use OAuth with a different scope
+            responses:
+                200:
+                    description: Wallets
+                    schema:
+                        $ref: "#/definitions/wallets"
+                401:
+                    schema: 
+                        $ref: '#/definitions/UnauthorizedError'
+                default:
+                    description: generic error response
+                    schema:
+                        $ref: "#/definitions/error"
+schemes:
+    - http
+swagger: "2.0"
+definitions:
+    login:
+        type: object
+        required:
+            - email
+            - password
+        properties:
+            email:
+                type: string
+                format: email
+                minLength: 5
+                maxLength: 255
+            password:
+                type: string
+                format: password
+                minLength: 5
+                maxLength: 255
+    wallets:
+        type: object
+    error:
+        type: object
+        required:
+            - message
+        properties:
+            code:
+                type: integer
+                format: int64
+            message:
+                type: string
+    UnauthorizedError:
+        description: Access token is missing or invalid
