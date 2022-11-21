@@ -5,8 +5,9 @@ import (
 	"arf/currency-conversion/internal/database"
 	"arf/currency-conversion/internal/models"
 	"fmt"
-	"gorm.io/gorm"
 	"log"
+
+	"gorm.io/gorm"
 )
 
 func Init() (db *gorm.DB) {
