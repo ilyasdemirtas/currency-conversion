@@ -2,8 +2,9 @@ package middlewares
 
 import (
 	token "arf/currency-conversion/internal/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func VerifyToken() gin.HandlerFunc {

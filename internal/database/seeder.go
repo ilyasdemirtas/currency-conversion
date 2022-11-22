@@ -20,11 +20,11 @@ func SeedData(db *gorm.DB) {
 	}
 
 	if db.Migrator().HasTable(&models.ExchangeRate{}) {
-		addUserWalletAccount(db)
+		addExchangeRates(db)
 	}
 
-	if db.Migrator().HasTable(&models.UserWalletAccount{}) {
-		addExchangeRates(db)
+	if db.Migrator().HasTable(&models.WalletAccount{}) {
+		addWalletAccount(db)
 	}
 }
 
@@ -59,11 +59,11 @@ func addCurrencies(db *gorm.DB) {
 
 }
 
-func addUserWalletAccount(db *gorm.DB) {
+func addWalletAccount(db *gorm.DB) {
 
-	if err := db.First(&models.UserWalletAccount{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+	if err := db.First(&models.WalletAccount{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
 
-		balances := []models.UserWalletAccount{
+		balances := []models.WalletAccount{
 			{UserId: 1, CurrencyId: 1, Balance: decimal.NewFromFloat(1000)},
 			{UserId: 1, CurrencyId: 2, Balance: decimal.NewFromFloat(1000)},
 			{UserId: 1, CurrencyId: 3, Balance: decimal.NewFromFloat(1000)},

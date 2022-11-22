@@ -4,8 +4,9 @@ import (
 	"arf/currency-conversion/app"
 	"arf/currency-conversion/internal/repository"
 	token "arf/currency-conversion/internal/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func CurrentUser(c *gin.Context) {

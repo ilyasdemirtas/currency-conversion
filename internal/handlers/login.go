@@ -4,8 +4,9 @@ import (
 	"arf/currency-conversion/app"
 	"arf/currency-conversion/internal/models"
 	"arf/currency-conversion/internal/repository"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type LoginInput struct {
