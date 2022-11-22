@@ -5,7 +5,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserWalletAccount struct {
+type WalletAccount struct {
 	ID         uint32          `json:"id"`
 	UserId     uint32          `json:"user_id"`
 	CurrencyId uint32          `json:"currency_id"`
