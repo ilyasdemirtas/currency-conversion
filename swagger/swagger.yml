@@ -1,3 +1,7 @@
+swagger: "2.0"
+
+schemes:
+    - http
 consumes:
     - application/json
 produces:
@@ -20,7 +24,7 @@ paths:
     /login:
         post:
             tags:
-                - login
+                - Login
             parameters:
                 - name: login
                   in: body
@@ -35,17 +39,17 @@ paths:
                     description: generic error response
                     schema:
                         $ref: "#/definitions/error"
-    /wallets:
+    /user-wallet-accounts:
         get:
             tags:
-                - wallets
+                - User Wallet Accounts
             security:
                 - BearerAuth: []   # Use OAuth with a different scope
             responses:
                 200:
-                    description: Wallets
+                    description: User Wallet Accounts
                     schema:
-                        $ref: "#/definitions/wallets"
+                        $ref: "#/definitions/user-wallet-accounts"
                 401:
                     schema: 
                         $ref: '#/definitions/UnauthorizedError'
@@ -53,9 +57,6 @@ paths:
                     description: generic error response
                     schema:
                         $ref: "#/definitions/error"
-schemes:
-    - http
-swagger: "2.0"
 definitions:
     login:
         type: object
@@ -73,12 +74,10 @@ definitions:
                 format: password
                 minLength: 5
                 maxLength: 255
-    wallets:
+    user-wallet-accounts:
         type: object
     error:
         type: object
-        required:
-            - message
         properties:
             code:
                 type: integer
