@@ -1,0 +1,15 @@
+package handlers
+
+func ExchangeRateByCurrencyNames(baseCurrency string, counterCurrency string) (models.ExchangeRates, error) {
+
+	db := app.GetDbConn()
+
+	exchangeRateR := repository.NewExchangeRate(db)
+	data, err := exchangeRateR.GetExchangeRateByCurrencyNames(baseCurrency, counterCurrency)
+
+	if err != nil {
+		return models.ExcangeRate{}, err
+	}
+
+	return data, nil
+}

@@ -3,6 +3,8 @@ package repository
 import (
 	"arf/currency-conversion/internal/models"
 	"fmt"
+
+	"github.com/shopspring/decimal"
 	"gorm.io/gorm"
 )
 
@@ -16,7 +18,7 @@ func NewExchangeRate(db *gorm.DB) ExchangeRateR {
 	}
 }
 
-func (r ExchangeRateR) All() ([]models.ExchangeRate, error) {
+func (r ExchangeRateR) ExchangeRates() ([]models.ExchangeRate, error) {
 	var exchangeRates []models.ExchangeRate
 
 	data := r.db.Model(&models.ExchangeRate{}).Scan(&exchangeRates)
@@ -46,4 +48,27 @@ func (r ExchangeRateR) ExchangeRateByBaseCurrencyIdAndCounterCurrencyId(baseCurr
 	}
 
 	return exchangeRates, nil
+}
+
+type ExcangeRate struct {
+	Price      decimal.Decimal
+	MarkupRate decimal.Decimal
+}
+
+func (r ExchangeRateR) GetExchangeRateByCurrencyNames(baseCurrency, counterCurrency string) (ExcangeRate, error) {
+
+	var exchangeRate ExcangeRate
+	result := r.db.Table("exchange_rates as er").
+		Joins("JOIN currencies as c1 ON c1.id=er.base_currency_id").
+		Joins("JOIN currencies as c2 ON c2.id=er.counter_currency_id").
+		Select("er.price, er.markup_rate").
+		Where("c1.code = ?", baseCurrency).
+		Where("c2.code = ?", counterCurrency).
+		First(&exchangeRate)
+
+	if result.Error != nil {
+		return ExcangeRate{}, result.Error
+	}
+
+	return exchangeRate, nil
 }
