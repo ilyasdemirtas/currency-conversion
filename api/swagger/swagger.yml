@@ -34,7 +34,9 @@ paths:
                 200:
                     description: Login
                     schema:
-                        $ref: "#/definitions/login"
+                        example: {
+	                                "token": "your_token"
+                                 }
                 default:
                     description: generic error response
                     schema:
@@ -48,11 +50,25 @@ paths:
             responses:
                 200:
                     description: User Wallet Accounts
-                    schema:
-                        $ref: "#/definitions/user-wallet-accounts"
                 401:
                     schema: 
-                        $ref: '#/definitions/UnauthorizedError'
+                        example: {
+                                "data": [
+                                    {
+                                        "Balance": "97749.032",
+                                        "Code": "TRY"
+                                    },
+                                    {
+                                        "Balance": "1030",
+                                        "Code": "USD"
+                                    },
+                                    {
+                                        "Balance": "1020",
+                                        "Code": "EUR"
+                                    }
+                                ],
+                                "message": "success"
+                            }
                 default:
                     description: generic error response
                     schema:
@@ -70,7 +86,16 @@ paths:
                 200:
                     description: Create Exchange Offer
                     schema:
-                        $ref: "#/definitions/create-exchange-offer"
+                        example: {
+                                    "data": {
+                                        "id": 3,
+                                        "base_currency_id": 3,
+                                        "counter_currency_id": 2,
+                                        "price": "1.1301404",
+                                        "markup_rate": "0.6"
+                                    },
+                                    "message": "success"
+                                }
                 default:
                     description: generic error response
                     schema:
@@ -87,8 +112,18 @@ paths:
             responses:
                 200:
                     description: Send Offer
-                    schema:
-                        $ref: "#/definitions/send-offer"
+                    schema: 
+                        example: {
+                                    "data": {
+                                        "user_id": 1,
+                                        "base_currency_id": 3,
+                                        "counter_currency_id": 2,
+                                        "price": "11.301",
+                                        "markup_rate": "0.6",
+                                        "amount": "10"
+                                    },
+                                    "message": "success"
+                                }
                 default:
                     description: generic error response
                     schema:
@@ -105,13 +140,13 @@ definitions:
                 format: email
                 minLength: 5
                 maxLength: 255
+                example: example@example.com
             password:
                 type: string
                 format: password
                 minLength: 5
                 maxLength: 255
-    user-wallet-accounts:
-        type: object
+                example: your_password
     create-exchange-offer:
         type: object
         required:
@@ -122,10 +157,12 @@ definitions:
                 type: string
                 minLength: 3
                 maxLength: 3
+                example: USD
             counter_currency:
                 type: string
                 minLength: 3
                 maxLength: 3
+                example: TRY
     send-offer:
         type: object
         required:
@@ -136,10 +173,17 @@ definitions:
                 type: string
                 minLength: 3
                 maxLength: 3
+                example: USD
             counter_currency:
                 type: string
                 minLength: 3
                 maxLength: 3
+                example: TRY
+            amount:
+                type: number
+                minimum: 0
+                example: ~0
+        
     error:
         type: object
         properties:
