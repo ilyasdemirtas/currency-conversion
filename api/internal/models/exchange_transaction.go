@@ -12,8 +12,9 @@ type ExchangeTransaction struct {
 	CounterCurrencyId uint32          `json:"counter_currency_id"`
 	Price             decimal.Decimal `gorm:"type:decimal(10,4);" json:"price"`
 	MarkupRate        decimal.Decimal `gorm:"type:decimal(10,4);" json:"markup_rate"`
-	User              User            `gorm:"constraint:OnUpdate:SET NULL,OnDelete:CASCADE;"`
-	BaseCurrency      Currency        `gorm:"constraint:OnUpdate:SET NULL,OnDelete:CASCADE;"`
-	CounterCurrency   Currency        `gorm:"constraint:OnUpdate:SET NULL,OnDelete:CASCADE;"`
-	gorm.Model
+	Amount            decimal.Decimal `json:"amount"`
+	User              User            `gorm:"constraint:OnUpdate:SET NULL,OnDelete:CASCADE;" json:"omitempty"`
+	BaseCurrency      Currency        `gorm:"constraint:OnUpdate:SET NULL,OnDelete:CASCADE;" json:"omitempty"`
+	CounterCurrency   Currency        `gorm:"constraint:OnUpdate:SET NULL,OnDelete:CASCADE;" json:"omitempty"`
+	gorm.Model        `json:"omitempty"`
 }

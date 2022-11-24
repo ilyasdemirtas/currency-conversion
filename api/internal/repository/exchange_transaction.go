@@ -5,12 +5,12 @@ import (
 	"fmt"
 )
 
-func (r R) CreateExchangeTransaction(data models.ExchangeTransaction) (models.ExchangeTransaction, error) {
-	result := r.db.Create(&data)
+func (r R) CreateExchangeTransaction(data models.ExchangeTransaction) (bool, error) {
+	err := r.db.Create(&data).Error
 
-	if result.Error != nil {
-		return data, fmt.Errorf("exchange transaction %v", result.Error)
+	if err != nil {
+		return false, fmt.Errorf("exchange transaction %v", err)
 	}
 
-	return data, nil
+	return true, nil
 }

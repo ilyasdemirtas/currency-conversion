@@ -44,22 +44,12 @@ func CreateExchangeOffer(c *gin.Context) {
 	rep := repository.NewR(app.GetDbConn())
 	result, err := rep.CreateExchangeOffer(exchangeRateOffer)
 
-	type ExchangeRateOffer struct {
-		Price      decimal.Decimal
-		MarkupRate decimal.Decimal
-	}
-
-	offer := ExchangeRateOffer{
-		Price:      result.Price,
-		MarkupRate: result.MarkupRate,
-	}
-
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": offer})
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": result})
 
 }
 

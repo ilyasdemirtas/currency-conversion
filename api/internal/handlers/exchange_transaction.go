@@ -8,11 +8,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shopspring/decimal"
 )
 
 type ExchangeTransactionInput struct {
-	BaseCurrency    string `json:"base_currency" binding:"required"`
-	CounterCurrency string `json:"counter_currency" binding:"required"`
+	BaseCurrency    string          `json:"base_currency" binding:"required"`
+	CounterCurrency string          `json:"counter_currency" binding:"required"`
+	Amount          decimal.Decimal `json:"amount" binding:"required"`
 }
 
 func CreateExchangeTransaction(c *gin.Context) {
@@ -30,6 +32,8 @@ func CreateExchangeTransaction(c *gin.Context) {
 		return
 	}
 
+	rep := repository.NewR(app.GetDbConn())
+
 	offer, err := GetExchangeRateOfferByCurrencyNames(input.BaseCurrency, input.CounterCurrency)
 
 	if err != nil {
@@ -37,22 +41,39 @@ func CreateExchangeTransaction(c *gin.Context) {
 		return
 	}
 
+	totalPrice := offer.Price.Mul(input.Amount)
+
+	hasBalance := rep.CheckUserBalanceByCurrency(userId, offer.CounterCurrencyId, totalPrice)
+	if hasBalance == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Insufficient balance for: " + input.CounterCurrency})
+		return
+	}
+
 	exchangeTransaction := models.ExchangeTransaction{
 		BaseCurrencyId:    offer.BaseCurrencyId,
 		CounterCurrencyId: offer.CounterCurrencyId,
-		Price:             offer.Price,
+		Amount:            input.Amount,
+		Price:             totalPrice,
 		MarkupRate:        offer.MarkupRate,
 		UserId:            userId,
 	}
 
-	rep := repository.NewR(app.GetDbConn())
-	data, err := rep.CreateExchangeTransaction(exchangeTransaction)
+	result, err := rep.CreateExchangeTransaction(exchangeTransaction)
 
-	if err != nil {
+	if err != nil && !result {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": data})
+	baseCurrencyWallet, _ := rep.WalletAccountByUserAndCurrency(userId, offer.BaseCurrencyId)
+	counterCurrencyWallet, _ := rep.WalletAccountByUserAndCurrency(userId, offer.CounterCurrencyId)
+
+	baseCurrencyWallet.Balance = baseCurrencyWallet.Balance.Add(input.Amount)
+	counterCurrencyWallet.Balance = counterCurrencyWallet.Balance.Sub(totalPrice)
+
+	rep.UpdateUserWallet(baseCurrencyWallet)
+	rep.UpdateUserWallet(counterCurrencyWallet)
+
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": exchangeTransaction})
 
 }
