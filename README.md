@@ -14,6 +14,8 @@ In the root dir of project: `go run .`
 
 ## API Documantation:
 
+Documentations of the endpoints are on the Swagger UI.
+
 Base URL: `localhost:8080/api`
 
 Swagger URL: `localhost:8080/docs`
