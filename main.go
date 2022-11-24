@@ -1,8 +1,8 @@
 package main
 
 import (
-	"arf/currency-conversion/app"
-	"arf/currency-conversion/internal/routes"
+	"arf/currency-conversion/api/app"
+	"arf/currency-conversion/api/routes"
 
 	"github.com/gin-gonic/gin"
 )
