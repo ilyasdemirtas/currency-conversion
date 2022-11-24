@@ -3,27 +3,15 @@ package repository
 import (
 	"arf/currency-conversion/internal/models"
 	"fmt"
-
-	"gorm.io/gorm"
 )
 
-type CurrencyR struct {
-	db *gorm.DB
-}
+func (r R) Currencies() ([]models.Currency, error) {
+	var data []models.Currency
 
-func NewCurrency(db *gorm.DB) CurrencyR {
-	return CurrencyR{
-		db: db,
-	}
-}
-
-func (r CurrencyR) Currencies() ([]models.Currency, error) {
-	var currencies []models.Currency
-
-	data := r.db.Model(&models.Currency{}).Scan(&currencies)
-	if data.Error != nil {
-		return nil, fmt.Errorf("Currency %v", data.Error)
+	result := r.db.Model(&models.Currency{}).Scan(&data)
+	if result.Error != nil {
+		return nil, fmt.Errorf("currency %v", result.Error)
 	}
 
-	return currencies, nil
+	return data, nil
 }

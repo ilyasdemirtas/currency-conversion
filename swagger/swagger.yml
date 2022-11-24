@@ -57,6 +57,42 @@ paths:
                     description: generic error response
                     schema:
                         $ref: "#/definitions/error"
+    /create-exchage-offer:
+        post:
+            tags:
+                - Create Exchange Offer
+            parameters:
+                - name: create-exchange-offer
+                  in: body
+                  schema:
+                      $ref: "#/definitions/create-exchange-offer"
+            responses:
+                200:
+                    description: Create Exchange Offer
+                    schema:
+                        $ref: "#/definitions/create-exchange-offer"
+                default:
+                    description: generic error response
+                    schema:
+                        $ref: "#/definitions/error"
+    /send-offer:
+        post:
+            tags:
+                - Send Offer
+            parameters:
+                - name: send-offer
+                  in: body
+                  schema:
+                      $ref: "#/definitions/send-offer"
+            responses:
+                200:
+                    description: Send Offer
+                    schema:
+                        $ref: "#/definitions/send-offer"
+                default:
+                    description: generic error response
+                    schema:
+                        $ref: "#/definitions/error"
 definitions:
     login:
         type: object
@@ -76,6 +112,34 @@ definitions:
                 maxLength: 255
     user-wallet-accounts:
         type: object
+    create-exchange-offer:
+        type: object
+        required:
+            - base_currency
+            - counter_currency
+        properties:
+            base_currency:
+                type: string
+                minLength: 3
+                maxLength: 3
+            counter_currency:
+                type: string
+                minLength: 3
+                maxLength: 3
+    send-offer:
+        type: object
+        required:
+            - base_currency
+            - counter_currency
+        properties:
+            base_currency:
+                type: string
+                minLength: 3
+                maxLength: 3
+            counter_currency:
+                type: string
+                minLength: 3
+                maxLength: 3
     error:
         type: object
         properties:

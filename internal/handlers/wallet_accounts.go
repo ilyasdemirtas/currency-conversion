@@ -16,18 +16,18 @@ type UserWalletAccount struct {
 }
 
 func UserWalletAccounts(c *gin.Context) {
-	db := app.GetDbConn()
 	userId, err := token.ExtractTokenID(c)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	walletAccountR := repository.NewWalletAccount(db)
-	data, err := walletAccountR.WalletAccountByUser(userId)
+	rep := repository.NewR(app.GetDbConn())
+	data, err := rep.WalletAccountByUser(userId)
 
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 

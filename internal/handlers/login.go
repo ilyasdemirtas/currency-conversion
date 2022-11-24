@@ -28,14 +28,13 @@ func Login(c *gin.Context) {
 	u.Email = input.Email
 	u.Password = input.Password
 
-	db := app.GetDbConn()
-	userR := repository.NewUser(db)
-	token, err := userR.LoginCheck(u.Email, u.Password)
+	rep := repository.NewR(app.GetDbConn())
+	data, err := rep.LoginCheck(u.Email, u.Password)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "email or password is incorrect."})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": token})
+	c.JSON(http.StatusOK, gin.H{"token": data})
 }

@@ -6,24 +6,13 @@ import (
 	"errors"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
-
-type UserR struct {
-	db *gorm.DB
-}
-
-func NewUser(db *gorm.DB) UserR {
-	return UserR{
-		db: db,
-	}
-}
 
 func VerifyPassword(password, hashedPassword string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-func (r UserR) LoginCheck(email string, password string) (string, error) {
+func (r R) LoginCheck(email string, password string) (string, error) {
 
 	var err error
 
@@ -51,16 +40,16 @@ func (r UserR) LoginCheck(email string, password string) (string, error) {
 
 }
 
-func (r UserR) GetUserByID(uid uint32) (models.User, error) {
+func (r R) GetUserByID(uid uint32) (models.User, error) {
 
-	var u models.User
+	var data models.User
 
-	if err := r.db.First(&u, uid).Error; err != nil {
-		return u, errors.New("user not found")
+	if err := r.db.First(&data, uid).Error; err != nil {
+		return data, errors.New("user not found")
 	}
 
-	u.Password = ""
+	data.Password = ""
 
-	return u, nil
+	return data, nil
 
 }

@@ -18,14 +18,13 @@ func CurrentUser(c *gin.Context) {
 		return
 	}
 
-	db := app.GetDbConn()
-	userR := repository.NewUser(db)
-	u, err := userR.GetUserByID(userId)
+	rep := repository.NewR(app.GetDbConn())
+	data, err := rep.GetUserByID(userId)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "success", "data": u})
+	c.JSON(http.StatusOK, gin.H{"message": "success", "data": data})
 }

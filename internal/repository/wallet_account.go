@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/shopspring/decimal"
-	"gorm.io/gorm"
 )
 
 type UserWalletAccount struct {
@@ -13,39 +12,29 @@ type UserWalletAccount struct {
 	Code    string
 }
 
-type WalletAccountR struct {
-	db *gorm.DB
-}
+func (r R) WalletAccountByUser(userId uint32) ([]UserWalletAccount, error) {
+	var data []UserWalletAccount
 
-func NewWalletAccount(db *gorm.DB) WalletAccountR {
-	return WalletAccountR{
-		db: db,
-	}
-}
-
-func (r WalletAccountR) WalletAccountByUser(userId uint32) ([]UserWalletAccount, error) {
-	var walletAccounts []UserWalletAccount
-
-	data := r.db.Table("wallet_accounts as uwa").
+	result := r.db.Table("wallet_accounts as uwa").
 		Joins("JOIN currencies as c ON c.id=uwa.currency_id").
 		Select("uwa.balance, c.code").
 		Where("uwa.user_id = ?", userId).
-		Find(&walletAccounts)
+		Find(&data)
 
-	if data.Error != nil {
-		return nil, fmt.Errorf("user wallet account %v", data.Error)
+	if result.Error != nil {
+		return nil, fmt.Errorf("user wallet account %v", result.Error)
 	}
 
-	return walletAccounts, nil
+	return data, nil
 }
 
-func (r WalletAccountR) WalletAccounts() ([]models.WalletAccount, error) {
-	var walletAccounts []models.WalletAccount
+func (r R) WalletAccounts() ([]models.WalletAccount, error) {
+	var data []models.WalletAccount
 
-	data := r.db.Model(&models.WalletAccount{}).Scan(&walletAccounts)
-	if data.Error != nil {
-		return nil, fmt.Errorf("wallet accounts %v", data.Error)
+	result := r.db.Model(&models.WalletAccount{}).Scan(&data)
+	if result.Error != nil {
+		return nil, fmt.Errorf("wallet accounts %v", result.Error)
 	}
 
-	return walletAccounts, nil
+	return data, nil
 }

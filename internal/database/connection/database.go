@@ -27,6 +27,7 @@ func Init() (db *gorm.DB) {
 		&models.ExchangeRate{},
 		&models.ExchangeRateOffer{},
 		&models.WalletAccount{},
+		&models.ExchangeTransaction{},
 	)
 
 	return db

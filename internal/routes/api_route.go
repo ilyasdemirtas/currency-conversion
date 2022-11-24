@@ -13,8 +13,8 @@ func GetAPIRoutes(r *gin.Engine) {
 	router.POST("/login", handlers.Login)
 
 	router.Use(middlewares.VerifyToken())
-	router.POST("/create-exchange-offer", handlers.CreateExchangeOffer)
-	router.POST("/offer")
 	router.GET("/user-wallet-accounts", handlers.UserWalletAccounts)
+	router.POST("/create-exchange-offer", handlers.CreateExchangeOffer)
+	router.POST("/send-offer", handlers.CreateExchangeTransaction)
 
 }

@@ -10,12 +10,17 @@ import (
 
 var db *gorm.DB
 
-func DbConn() {
+func Init() {
+	loadEnv()
+	dbConn()
+}
+
+func dbConn() {
 	db = connection.Init()
 	database.SeedData(db)
 }
 
-func LoadEnv() {
+func loadEnv() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		panic(err)

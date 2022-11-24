@@ -10,8 +10,7 @@ import (
 func main() {
 	r := gin.Default()
 
-	app.LoadEnv()
-	app.DbConn()
+	app.Init()
 
 	routes.GetAPIRoutes(r)
 	routes.GetSwaggerRoute(r)
