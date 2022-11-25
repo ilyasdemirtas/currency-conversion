@@ -6,6 +6,7 @@ The MySQL database should create on your local machine. DB and other information
 - MySQL tables will be ready when project run by migration of the [Gorm package](https://gorm.io/)
 - Default data will be insert when project run.
 - All currencies with the code stored at the `currencies` table
+- Default credentials are U: ilyasdemirtas@hotmail.com.tr P: 123qwe
 
 ### Docker:
 In the root dir of project: `docker-compose up`
